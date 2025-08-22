@@ -1,0 +1,55 @@
+GET http://localhost:3300/investiments/status
+
+###
+GET http://localhost:3300/investiments
+
+###
+POST http://localhost:3300/investiments
+Content-Type: application/json
+
+{
+
+    "dataCompra": "2025-07-31",
+    "precoCompra": 25.50,
+    "precoMercado": 26.5,
+    "quantidade": 5,
+    "simbolo": "BBAS3",
+    "tipo": "ACAO"
+
+}
+
+###
+POST http://localhost:3300/investiments
+Content-Type: application/json
+
+{
+
+    "dataCompra": "2025-08-05",
+    "precoCompra": 250,
+    "precoMercado": 275,
+    "quantidade": 2,
+    "simbolo": "DDBS5",
+    "tipo": "FUNDO"
+
+}
+
+###
+GET http://localhost:3300/investiments/ec0c8e18-24de-4a3d-839f-f618272cc39e
+
+###
+PUT http://localhost:3300/investiments/098d7d21-d50e-4f9d-996f-4c8232419007
+Content-Type: application/json
+
+{
+    
+    "precoMercado": 290
+}
+
+###
+DELETE http://localhost:3300/investiments/ec0c8e18-24de-4a3d-839f-f618272cc39e
+
+###
+GET http://localhost:3300/investiments/resumo
+
+###
+GET http://localhost:3300/investiments/tipo/FUNDO

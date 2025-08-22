@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-CarteiraInvestimentosApplication<carteira_investimentos>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "java.br.edu.ufop.web.carteira_investimentos.CarteiraInvestimentosApplication",
+            "projectName": "carteira_investimentos",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-CarteiraInvestimentosApplication<carteira_investimentos>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "br.edu.ufop.web.carteira_investimentos.CarteiraInvestimentosApplication",
+            "projectName": "carteira_investimentos",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
