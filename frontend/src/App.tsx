@@ -34,93 +34,107 @@ function App() {
 
 export default App*/
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import CardResumo from './components/CardResumo';
 import InvestimentTable from './components/InvestimentosTable';
 import InvestimentModal from './components/CreateInvestimentos';
 import { FaPlus } from 'react-icons/fa';
-import logo from './assets/icone.svg'
-import * as api from './api/investimentsApi';
+import api from './api/investimentsApi';
 import type { Investimento, InvestimentoPayload, ResumoInvestimento } from './types';
 import './App.css';
+import InvestimentosTable from './components/InvestimentosTable';
+import CreateInvestimento from './components/CreateInvestimentos';
 
 function App(){
   const [investimentos, setInvestimentos] = useState<Investimento[]>([]);
   const [resumo, setResumo] = useState<ResumoInvestimento | null>(null);
-  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingInvestimento, setEditingInvestimento] = useState<Investimento | null>(null);
+  const [investimentoToEdit, setInvestimentoToEdit] = useState<Investimento | null>(null);
 
-  const fetchData = useCallback(async () => {
+  const fetchData = async () => {
     try{
-      setLoading(true);
-      const [investimentsData, resumoData] = await Promise.all([
-        api.getInvestments(),
-        api.getResumo(),
-      ]);
-      setInvestimentos(investimentsData);
+
+      const investimentosData = await api('/investimentos');
+      const resumoData = await api('/investimentos/resumo');
+
+      setInvestimentos(investimentosData);
       setResumo(resumoData);
+
     } catch (error) {
       console.error("Erro ao buscar os dados:", error);
-    } finally {
-      setLoading(false);
     }
-
-  }, []);
+  };
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, []);
 
-  const handleOpenModal = (investiment: Investimento | null = null) => {
-    setEditingInvestimento(investiment);
+  const handleOpenModal = () => {
+    setInvestimentoToEdit(null);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setEditingInvestimento(null);
-  }
-
-  const handleSaveInvestimento = async (payload: InvestimentoPayload) => {
-    try{
-      if(editingInvestimento){
-        await api.updateInvestimento(editingInvestimento.id, payload.precoMercado);
-      } else{
-        await api.createInvestimento(payload);
-      }
-
-      fetchData();
-      handleCloseModal();
-
-    } catch (error) {
-      console.error("Erro ao salvar investimento:", error);
-    }
+    setInvestimentoToEdit(null);
   };
 
-  const handleDeleteInvestimento = async (id: string) => {
-    if(window.confirm("Tem certeza que deseja remover este investimento?")){
-      try{
-        await api.deleteInvestimento(id);
-        fetchData();
-      } catch (error) {
-        console.error("Erro ao deletar investimento:", error);
-      }
-    }
+  const handleRefreshData = () => {
+    handleCloseModal();
+    fetchData();
+  };
+
+  const handleEdit = (investimento: Investimento) => {
+    setInvestimentoToEdit(investimento);
+    setIsModalOpen(true);
   };
 
   const totalValue = investimentos.reduce((sum, investiment) => sum + investiment.valorMercado, 0);
+
   const totalInvested = resumo?.totalInvestido ?? 0;
+
   const profit = totalValue - totalInvested;
+
   const profitPercent = totalInvested > 0 ? (profit / totalInvested) * 100 : 0;
-  
-  if(loading){
-    return <div className="loading">Carregando...</div>
-  }
 
   return (
     <div className="app-container">
+      <Header numAtivos={resumo?.contagemAtivos ?? 0}/>
+      <main>
+        <div className="dashboard-grid">
+            <CardResumo titulo="Valor Investido" valor={totalInvested}/>
+            <CardResumo titulo="Valor Atual" valor={totalValue}/>
+            <CardResumo
+                titulo="Lucro/Prejuízo"
+                valor={profit}
+                change={`${profit >= 0 ? '+' : ''}${profitPercent.toFixed(2)}%`}
+                changeCor={profit >= 0 ? '#28a745' : '#dc3545'}
+            />
+            <CardResumo titulo="Total da Ativos" valor={resumo?.contagemAtivos.toString() ?? '0'}/> 
+          </div>
+          <div className="toolbar">
+            <h2>Meus Investimentos</h2>
+            <button className="button-primary" onClick={() => handleOpenModal()}><FaPlus/> Adicionar Investimento</button>
+          </div>
+
+        {resumo && <CardResumo resumo={resumo}/>}
+        <InvestimentosTable 
+            investimentos={investimentos}
+            onEdit={handleEdit}
+            onDelete={handleRefreshData}
+        />
+      </main>
+      <CreateInvestimento
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSave={handleRefreshData}
+          investimentoToEdit={investimentoToEdit}
+      />
+        
+
+    </div>
+    /*<div className="app-container">
       <Header numAtivos={resumo?.contagemAtivos ?? 0}/>
         <main>
           <div className="dashboard-grid">
@@ -151,10 +165,11 @@ function App(){
             isOpen={isModalOpen}
             onClose={handleCloseModal}
             onSave={handleSaveInvestimento}
-            investimentoToEdit={editingInvestimento}
+            investimentoToEdit={investimentoToEdit}
         />
 
-    </div>
+    </div>*/
+
   )
 
 }
