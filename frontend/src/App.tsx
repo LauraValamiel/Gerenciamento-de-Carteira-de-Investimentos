@@ -37,9 +37,6 @@ export default App*/
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import CardResumo from './components/CardResumo';
-import InvestimentTable from './components/InvestimentosTable';
-import InvestimentModal from './components/CreateInvestimentos';
-import { FaPlus } from 'react-icons/fa';
 import api from './api/investimentsApi';
 import type { Investimento, InvestimentoPayload, ResumoInvestimento } from './types';
 import './App.css';
@@ -54,7 +51,6 @@ function App(){
 
   const fetchData = async () => {
     try{
-
       const investimentosData = await api('/investimentos');
       const resumoData = await api('/investimentos/resumo');
 
@@ -90,40 +86,22 @@ function App(){
     setIsModalOpen(true);
   };
 
-  const totalValue = investimentos.reduce((sum, investiment) => sum + investiment.valorMercado, 0);
-
-  const totalInvested = resumo?.totalInvestido ?? 0;
-
-  const profit = totalValue - totalInvested;
-
-  const profitPercent = totalInvested > 0 ? (profit / totalInvested) * 100 : 0;
-
   return (
     <div className="app-container">
-      <Header numAtivos={resumo?.contagemAtivos ?? 0}/>
+      <Header onAddInvestimento={handleOpenModal} totalAtivos={resumo?.contagemAtivos}/>
       <main>
-        <div className="dashboard-grid">
-            <CardResumo titulo="Valor Investido" valor={totalInvested}/>
-            <CardResumo titulo="Valor Atual" valor={totalValue}/>
-            <CardResumo
-                titulo="Lucro/Prejuízo"
-                valor={profit}
-                change={`${profit >= 0 ? '+' : ''}${profitPercent.toFixed(2)}%`}
-                changeCor={profit >= 0 ? '#28a745' : '#dc3545'}
-            />
-            <CardResumo titulo="Total da Ativos" valor={resumo?.contagemAtivos.toString() ?? '0'}/> 
-          </div>
-          <div className="toolbar">
+        {resumo && <CardResumo resumo={resumo} investimentos={investimentos}/>}
+        <div className="investimentos-container">
+          <div className="tool-bar">
             <h2>Meus Investimentos</h2>
-            <button className="button-primary" onClick={() => handleOpenModal()}><FaPlus/> Adicionar Investimento</button>
           </div>
-
-        {resumo && <CardResumo resumo={resumo}/>}
-        <InvestimentosTable 
-            investimentos={investimentos}
-            onEdit={handleEdit}
-            onDelete={handleRefreshData}
-        />
+           <InvestimentosTable 
+              investimentos={investimentos}
+              onEdit={handleEdit}
+              onDelete={handleRefreshData}
+          />
+        </div>
+       
       </main>
       <CreateInvestimento
           isOpen={isModalOpen}
