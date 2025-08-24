@@ -38,7 +38,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import CardResumo from './components/CardResumo';
 import InvestimentTable from './components/InvestimentosTable';
-import InvestimentModal from './components/InvestimentosModal';
+import InvestimentModal from './components/CreateInvestimentos';
 import { FaPlus } from 'react-icons/fa';
 import logo from './assets/icone.svg'
 import * as api from './api/investimentsApi';

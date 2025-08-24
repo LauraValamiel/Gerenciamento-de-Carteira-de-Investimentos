@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import type { Investimento, InvestimentoPayload, TiposAtivos } from '../types';
+import api from '../api/investimentsApi';
 
-interface InvestimentoModalInterface {
+
+interface CreateInvestimentoInterface {
     isOpen: boolean;
     onClose: () => void;
-    onSave: (investimento: InvestimentoPayload) => void;
+    onSave: ( ) => void;
     investimentoToEdit: Investimento | null;
 }
 
-const InvestimentoModal: React.FC<InvestimentoModalInterface> = ({ isOpen, onClose, onSave, investimentoToEdit }) => {
+const CreateInvestimento: React.FC<CreateInvestimentoInterface> = ({ isOpen, onClose, onSave, investimentoToEdit }) => {
     const initialState: InvestimentoPayload = {
         tipo: 'ACAO',
         simbolo: '',
@@ -21,8 +23,11 @@ const InvestimentoModal: React.FC<InvestimentoModalInterface> = ({ isOpen, onClo
     const [form, setForm] = useState<InvestimentoPayload>(initialState);
 
     useEffect(() => {
-        if(investimentoToEdit){
-            setForm(investimentoToEdit);
+        if(investimentoToEdit && isOpen){
+            setForm({
+                ...investimentoToEdit,
+                dataCompra: new Date(investimentoToEdit.dataCompra).toISOString().split('T')[0],
+            });
         } else{
             setForm(initialState);
         }
@@ -34,9 +39,34 @@ const InvestimentoModal: React.FC<InvestimentoModalInterface> = ({ isOpen, onClo
 
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        onSave(form);
+        try{
+            if (investimentoToEdit){
+                await api(`/investimentos/${investimentoToEdit.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(form),
+                });
+                alert('Investimento atualizado com sucesso!');
+            } else{
+                await api('/investimentos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(form),
+                });
+                alert('Investimento criado com sucesso!');
+            }
+            onSave();
+            onClose();
+        }catch (error) {
+            console.error('Erro ao salvar investimento:', error);
+            alert('Erro ao salvar investimento.')
+        }
     };
 
     if (!isOpen) return null;
@@ -89,4 +119,4 @@ const InvestimentoModal: React.FC<InvestimentoModalInterface> = ({ isOpen, onClo
 
 }
 
-export default InvestimentoModal
+export default CreateInvestimento
