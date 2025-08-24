@@ -22,8 +22,17 @@ public class InvestimentosDTO{
     BigDecimal precoCompra;
     LocalDate dataCompra;
     BigDecimal precoMercado;
-    BigDecimal valorInvestido;
-    BigDecimal valorMercado;
-    BigDecimal ganhoOuPerda;
+
+    public BigDecimal getValorInvestido(){
+        return precoCompra.multiply(quantidade);
+    }
+
+    public BigDecimal getValorMercado(){
+        return precoMercado.multiply(quantidade);
+    }
+
+    public BigDecimal getGanhoOuPerda(){
+        return getValorMercado().subtract(getValorInvestido());
+    }
 
 }

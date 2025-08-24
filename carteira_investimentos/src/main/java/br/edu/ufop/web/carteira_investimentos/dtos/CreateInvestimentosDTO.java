@@ -19,5 +19,4 @@ public class CreateInvestimentosDTO{
     BigDecimal quantidade;
     BigDecimal precoCompra;
     LocalDate dataCompra;
-    BigDecimal precoMercado;
 }

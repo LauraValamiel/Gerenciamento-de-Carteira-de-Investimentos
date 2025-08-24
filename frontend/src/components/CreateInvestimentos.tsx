@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { Investimento, InvestimentoPayload, TiposAtivos } from '../types';
-import api from '../api/investimentsApi';
-
+import api from '../api/investimentosApi';
 
 interface CreateInvestimentoInterface {
     isOpen: boolean;
@@ -10,22 +9,24 @@ interface CreateInvestimentoInterface {
     investimentoToEdit: Investimento | null;
 }
 
+type FormState = Omit<InvestimentoPayload, 'precoMercado'>;
+
 const CreateInvestimento: React.FC<CreateInvestimentoInterface> = ({ isOpen, onClose, onSave, investimentoToEdit }) => {
-    const initialState: InvestimentoPayload = {
+    const initialState: FormState = {
         tipo: 'ACAO',
         simbolo: '',
         quantidade: 0,
         precoCompra: 0,
-        dataCompra: new Date().toISOString().split('T')[0],
-        precoMercado: 0,
+        dataCompra: new Date().toISOString().split('T')[0]
     };
 
-    const [form, setForm] = useState<InvestimentoPayload>(initialState);
+    const [form, setForm] = useState<FormState>(initialState);
 
     useEffect(() => {
         if(investimentoToEdit && isOpen){
+            const { id, precoMercado, ...editableData } = investimentoToEdit;
             setForm({
-                ...investimentoToEdit,
+                ...editableData,
                 dataCompra: new Date(investimentoToEdit.dataCompra).toISOString().split('T')[0],
             });
         } else{
@@ -35,7 +36,7 @@ const CreateInvestimento: React.FC<CreateInvestimentoInterface> = ({ isOpen, onC
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: name === 'quantidade' || name === 'precoCompra' || name === 'precoMercado' ? parseFloat(value) : value}));
+        setForm(prev => ({ ...prev, [name]: name === 'quantidade' || name === 'precoCompra' ? parseFloat(value) : value}));
 
     };
 
@@ -43,12 +44,18 @@ const CreateInvestimento: React.FC<CreateInvestimentoInterface> = ({ isOpen, onC
         e.preventDefault();
         try{
             if (investimentoToEdit){
+
+                const updatePayload = {
+                    ...form,
+                    id: investimentoToEdit.id
+                }
+
                 await api(`/investimentos/${investimentoToEdit.id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(form),
+                    body: JSON.stringify(updatePayload),
                 });
                 alert('Investimento atualizado com sucesso!');
             } else{
@@ -92,15 +99,11 @@ const CreateInvestimento: React.FC<CreateInvestimentoInterface> = ({ isOpen, onC
                     </div>
                     <div className="form-group">
                         <label>Quantidade</label>
-                        <input type="text" name='quantidade' value={form.quantidade} onChange={handleChange} required/>
+                        <input type="number" name='quantidade' value={form.quantidade} onChange={handleChange} required/>
                     </div>
                     <div className="form-group">
                         <label>Preço de Compra (R$)</label>
                         <input type="number" step="0.01" name="precoCompra" value={form.precoCompra} onChange={handleChange} required/>
-                    </div>
-                    <div className="form-group">
-                        <label>Preço de Mercado (R$)</label>
-                        <input type="number" step="0.01" name="precoMercado" value={form.precoMercado} onChange={handleChange} required/>
                     </div>
                     <div className="form-group">
                         <label>Data de Compra</label>
@@ -119,4 +122,4 @@ const CreateInvestimento: React.FC<CreateInvestimentoInterface> = ({ isOpen, onC
 
 }
 
-export default CreateInvestimento
+export default CreateInvestimento;

@@ -1,6 +1,5 @@
 package br.edu.ufop.web.carteira_investimentos.controllers;
 
-
 import java.util.List;
 import java.util.UUID;
 
@@ -24,8 +23,6 @@ import br.edu.ufop.web.carteira_investimentos.services.InvestimentosService;
 import lombok.AllArgsConstructor;
 
 
-
-
 @RestController
 @AllArgsConstructor
 @RequestMapping("investimentos")
@@ -46,7 +43,6 @@ public class InvestimentosController {
         return ResponseEntity.ok(investimentosList);
     }
 
-    
     @PostMapping
     public ResponseEntity<InvestimentosDTO> createInvestimentos(@RequestBody CreateInvestimentosDTO createInvestimentosDTO) {
         
@@ -55,7 +51,6 @@ public class InvestimentosController {
         return ResponseEntity.ok(investimentosDTO);
     }
     
-
     @GetMapping("/tipo/{tipo}")
     public ResponseEntity<List<InvestimentosDTO>> getInvestimentosByTipo(@PathVariable EnumTiposAtivos tipo) {
 
@@ -79,7 +74,6 @@ public class InvestimentosController {
 
         return ResponseEntity.ok(investimentosDTO);
     }
-    
 
     @PutMapping("/{id}")
     public ResponseEntity<InvestimentosDTO> updateInvestimento(@PathVariable String id, @RequestBody UpdateInvestimentosDTO updateInvestimentosDTO) {
@@ -106,7 +100,6 @@ public class InvestimentosController {
         return ResponseEntity.ok("Investiment has been deleted");
 
     }
-
     
     @GetMapping("/resumo")
     public ResponseEntity<InvestimentosResumoDTO> getResumo() {

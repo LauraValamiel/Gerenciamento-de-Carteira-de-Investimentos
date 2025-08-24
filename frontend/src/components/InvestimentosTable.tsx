@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Investimento, TiposAtivos } from '../types';
 import { FaEdit, FaFilter, FaPlus, FaTrash } from 'react-icons/fa';
-import api from '../api/investimentsApi';
+import api from '../api/investimentosApi';
 
 interface InvestimentoTableInterface {
     investimentos: Investimento[];
@@ -33,6 +33,12 @@ const InvestimentoTable: React.FC<InvestimentoTableInterface> = ({ investimentos
     const formatCurrency = (value: number) => {
         return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     };
+
+    const investimentosOrdenados = [...investimentos].sort((a, b) => {
+        const lucroA = (a.quantidade * a.precoMercado) - (a.quantidade * a.precoCompra);
+        const lucroB = (b.quantidade * b.precoMercado) - (b.quantidade * b.precoCompra);
+        return lucroB - lucroA;
+    });
 
     return (
         <>
@@ -74,7 +80,7 @@ const InvestimentoTable: React.FC<InvestimentoTableInterface> = ({ investimentos
                             </tr>
                         </thead>
                         <tbody>
-                            {investimentos.map((investimento) => {
+                            {investimentosOrdenados.map((investimento) => {
                                 const valorInvestido = investimento.quantidade * investimento.precoCompra;
                                 const valorMercado = investimento.quantidade * investimento.precoMercado;
                                 const ganhoOuPerda = valorMercado - valorInvestido;

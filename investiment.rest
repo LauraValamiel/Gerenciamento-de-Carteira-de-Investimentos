@@ -1,55 +1,73 @@
-GET http://localhost:3300/investiments/status
+GET http://localhost:3300/investimentos/status
 
 ###
-GET http://localhost:3300/investiments
+GET http://localhost:3300/investimentos
 
 ###
-POST http://localhost:3300/investiments
+POST http://localhost:3300/investimentos
 Content-Type: application/json
 
 {
 
-    "dataCompra": "2025-07-31",
-    "precoCompra": 25.50,
-    "precoMercado": 26.5,
+    "tipo": "CRIPTO",
+    "simbolo": "SOL",
+    "quantidade": 10,
+    "precoCompra": 750.00,
+    "dataCompra": "2024-05-22"
+
+}
+
+###
+POST http://localhost:3300/investimentos
+Content-Type: application/json
+
+{
+
+    "tipo": "RENDA_FIXA",
+    "simbolo": "TESOURO IPCA+ 2035",
     "quantidade": 5,
-    "simbolo": "BBAS3",
-    "tipo": "ACAO"
-
+    "precoCompra": 450.00,
+    "dataCompra": "2023-10-10"
 }
 
+
+
 ###
-POST http://localhost:3300/investiments
+GET http://localhost:3300/investimentos/0ff2a3ff-2111-492f-be31-37d208aeda68
+
+###
+PUT http://localhost:3300/investimentos/e096f065-4ce7-4e22-96a6-cab9fb2de7ec
 Content-Type: application/json
 
 {
-
-    "dataCompra": "2025-08-05",
-    "precoCompra": 250,
-    "precoMercado": 275,
-    "quantidade": 2,
-    "simbolo": "DDBS5",
-    "tipo": "FUNDO"
-
-}
-
-###
-GET http://localhost:3300/investiments/ec0c8e18-24de-4a3d-839f-f618272cc39e
-
-###
-PUT http://localhost:3300/investiments/098d7d21-d50e-4f9d-996f-4c8232419007
-Content-Type: application/json
-
-{
+    "tipo": "RENDA_FIXA",
+    "simbolo": "TESOURO IPCA+ 2035",
+    "quantidade": 9,
+    "precoCompra": 810.00,
+    "dataCompra": "2023-10-10"
     
-    "precoMercado": 290
 }
 
 ###
-DELETE http://localhost:3300/investiments/ec0c8e18-24de-4a3d-839f-f618272cc39e
+PUT http://localhost:3300/investimentos/3644c5ba-34f7-4ab9-aabc-542fce5c9526
+Content-Type: application/json
+
+{
+
+    "tipo": "CRIPTO",
+    "simbolo": "SOL",
+    "quantidade": 15,
+    "precoCompra": 1125.00,
+    "dataCompra": "2024-05-22"
+
+}
+
 
 ###
-GET http://localhost:3300/investiments/resumo
+DELETE http://localhost:3300/investimentos/3644c5ba-34f7-4ab9-aabc-542fce5c9526
 
 ###
-GET http://localhost:3300/investiments/tipo/FUNDO
+GET http://localhost:3300/investimentos/resumo
+
+###
+GET http://localhost:3300/investimentos/tipo/FUNDO

@@ -1,6 +1,5 @@
 package br.edu.ufop.web.carteira_investimentos.models;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;

@@ -1,6 +1,7 @@
 package br.edu.ufop.web.carteira_investimentos.services;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -8,6 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import br.edu.ufop.web.carteira_investimentos.converters.InvestimentosConverter;
@@ -27,6 +29,7 @@ import lombok.AllArgsConstructor;
 public class InvestimentosService {
 
     private final IInvestimentosRepository investimentosRepository;
+    private final SimulacaoMercadoService simulacaoMercadoService;
 
     public List<InvestimentosDTO> getAllInvestimentos(){
 
@@ -86,6 +89,8 @@ public class InvestimentosService {
 
         InvestimentosDomain investimentosDomain = InvestimentosConverter.toInvestimentosDomain(createInvestimentosDTO);
 
+        investimentosDomain.setPrecoMercado(investimentosDomain.getPrecoCompra());
+
         InvestimentosModel investimentosModel = InvestimentosConverter.toInvestimentosModel(investimentosDomain);
 
         return InvestimentosConverter.toInvestimentosDTO(investimentosRepository.save(investimentosModel));
@@ -97,13 +102,17 @@ public class InvestimentosService {
         Optional<InvestimentosModel> optionalInvestimentosModel = investimentosRepository.findById(updateInvestimentosDTO.getId());
 
         if(optionalInvestimentosModel.isEmpty()){
-            return null;
+            throw new RuntimeException("Investimento não encontrado para atualização");
         }
 
         InvestimentosModel investimentosModel = optionalInvestimentosModel.get();
         InvestimentosDomain investimentosDomain = InvestimentosConverter.toInvestimentosDomain(updateInvestimentosDTO);
 
-        investimentosModel.setPrecoMercado(investimentosDomain.getPrecoMercado());
+        investimentosModel.setTipo(investimentosDomain.getTipo());
+        investimentosModel.setSimbolo(investimentosDomain.getSimbolo());
+        investimentosModel.setQuantidade(investimentosDomain.getQuantidade());
+        investimentosModel.setPrecoCompra(investimentosDomain.getPrecoCompra());
+        investimentosModel.setDataCompra(investimentosDomain.getDataCompra());
 
         return InvestimentosConverter.toInvestimentosDTO(investimentosRepository.save(investimentosModel));
 
@@ -118,6 +127,22 @@ public class InvestimentosService {
         }
 
         investimentosRepository.delete(optionalInvestimentosModel.get());
+
+    }
+
+    @Scheduled(fixedRate = 10000)
+    public void updateValorMercado(){
+        System.out.println("Executando atualizações de preços de mercado...");
+        List<InvestimentosModel> investimentos = investimentosRepository.findAll();
+        
+        for (InvestimentosModel investimentosModel : investimentos){
+            BigDecimal precoAntigo = investimentosModel.getPrecoMercado();
+            BigDecimal novoPreco = simulacaoMercadoService.getNovoPreco(precoAntigo, investimentosModel.getTipo());
+            investimentosModel.setPrecoMercado(novoPreco);
+        }
+
+        investimentosRepository.saveAll(investimentos);
+        System.out.println(investimentos.size() + "ativos foram atualizados.");
 
     }
 

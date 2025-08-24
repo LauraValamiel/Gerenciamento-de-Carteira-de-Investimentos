@@ -1,43 +1,7 @@
-/*import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
-
-export default App*/
-
 import React, { useState, useEffect, useMemo } from 'react';
 import Header from './components/Header';
 import CardResumo from './components/CardResumo';
-import api from './api/investimentsApi';
+import api from './api/investimentosApi';
 import type { TiposAtivos, Investimento, InvestimentoPayload, ResumoInvestimento } from './types';
 import './App.css';
 import InvestimentosTable from './components/InvestimentosTable';
@@ -65,6 +29,12 @@ function App(){
 
   useEffect(() => {
     fetchData();
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+
   }, []);
 
   const handleOpenModal = () => {
@@ -116,44 +86,7 @@ function App(){
           onSave={handleRefreshData}
           investimentoToEdit={investimentoToEdit}
       />
-        
-
     </div>
-    /*<div className="app-container">
-      <Header numAtivos={resumo?.contagemAtivos ?? 0}/>
-        <main>
-          <div className="dashboard-grid">
-            <CardResumo titulo="Valor Investido" valor={totalInvested}/>
-            <CardResumo titulo="Valor Atual" valor={totalValue}/>
-            <CardResumo
-                titulo="Lucro/Prejuízo"
-                valor={profit}
-                change={`${profit >= 0 ? '+' : ''}${profitPercent.toFixed(2)}%`}
-                changeCor={profit >= 0 ? '#28a745' : '#dc3545'}
-            />
-            <CardResumo titulo="Total da Ativos" valor={resumo?.contagemAtivos.toString() ?? '0'}/> 
-          </div>
-
-          <div className="toolbar">
-            <h2>Meus Investimentos</h2>
-            <button className="button-primary" onClick={() => handleOpenModal()}><FaPlus/> Adicionar Investimento</button>
-          </div>
-
-          <InvestimentTable
-              investimentos={investimentos}
-              onEdit={handleOpenModal}
-              onDelete={handleDeleteInvestimento}
-          />
-        </main>
-
-        <InvestimentModal
-            isOpen={isModalOpen}
-            onClose={handleCloseModal}
-            onSave={handleSaveInvestimento}
-            investimentoToEdit={investimentoToEdit}
-        />
-
-    </div>*/
 
   )
 

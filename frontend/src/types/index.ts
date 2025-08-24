@@ -27,5 +27,4 @@ export interface InvestimentoPayload {
     quantidade: number;
     precoCompra: number;
     dataCompra: string;
-    precoMercado: number;
 }

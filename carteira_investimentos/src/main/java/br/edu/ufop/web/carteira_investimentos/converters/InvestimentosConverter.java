@@ -1,6 +1,5 @@
 package br.edu.ufop.web.carteira_investimentos.converters;
 
-
 import br.edu.ufop.web.carteira_investimentos.domain.InvestimentosDomain;
 import br.edu.ufop.web.carteira_investimentos.dtos.CreateInvestimentosDTO;
 import br.edu.ufop.web.carteira_investimentos.dtos.InvestimentosDTO;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class InvestimentosConverter {
-
 
     public static InvestimentosDTO toInvestimentosDTO(InvestimentosModel investimentosModel){
         if (investimentosModel == null){
@@ -25,16 +23,10 @@ public class InvestimentosConverter {
         investimentosDTO.setPrecoCompra(investimentosModel.getPrecoCompra());
         investimentosDTO.setDataCompra(investimentosModel.getDataCompra());
         investimentosDTO.setPrecoMercado(investimentosModel.getPrecoMercado());
-        //investimentsDTO.setValorInvestido(investimentsModel.getValorInvestido());
-        //investimentsDTO.setValorMercado(investimentsModel.getValorMercado());
-        //investimentsDTO.setGanhoOuPerda(investimentsModel.getGanhoOuPerda());
-
-
         
         return investimentosDTO;
 
     }
-
 
     public static InvestimentosModel toInvestimentosModel(InvestimentosDomain investimentosDomain){
         return InvestimentosModel.builder()
@@ -55,7 +47,6 @@ public class InvestimentosConverter {
         .quantidade(createInvestimentosDTO.getQuantidade())
         .precoCompra(createInvestimentosDTO.getPrecoCompra())
         .dataCompra(createInvestimentosDTO.getDataCompra())
-        .precoMercado(createInvestimentosDTO.getPrecoMercado())
         .build();
 
     }
@@ -63,10 +54,13 @@ public class InvestimentosConverter {
     public static InvestimentosDomain toInvestimentosDomain(UpdateInvestimentosDTO updateInvestimentosDTO){
         
         return InvestimentosDomain.builder()
-        .precoMercado(updateInvestimentosDTO.getPrecoMercado())
+        .tipo(updateInvestimentosDTO.getTipo())
+        .simbolo(updateInvestimentosDTO.getSimbolo())
+        .quantidade(updateInvestimentosDTO.getQuantidade())
+        .precoCompra(updateInvestimentosDTO.getPrecoCompra())
+        .dataCompra(updateInvestimentosDTO.getDataCompra())
         .build();
 
     }
-
 
 }
