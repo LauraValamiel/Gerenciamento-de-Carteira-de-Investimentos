@@ -34,11 +34,11 @@ function App() {
 
 export default App*/
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Header from './components/Header';
 import CardResumo from './components/CardResumo';
 import api from './api/investimentsApi';
-import type { Investimento, InvestimentoPayload, ResumoInvestimento } from './types';
+import type { TiposAtivos, Investimento, InvestimentoPayload, ResumoInvestimento } from './types';
 import './App.css';
 import InvestimentosTable from './components/InvestimentosTable';
 import CreateInvestimento from './components/CreateInvestimentos';
@@ -48,6 +48,7 @@ function App(){
   const [resumo, setResumo] = useState<ResumoInvestimento | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [investimentoToEdit, setInvestimentoToEdit] = useState<Investimento | null>(null);
+  const [filtroTipo, setFiltroTipo] = useState<TiposAtivos | 'TODOS'>('TODOS');
 
   const fetchData = async () => {
     try{
@@ -86,22 +87,28 @@ function App(){
     setIsModalOpen(true);
   };
 
+  const investimentosFiltrados = useMemo(() => {
+    if(filtroTipo === 'TODOS'){
+      return investimentos;
+    }
+    return investimentos.filter(investimento => investimento.tipo === filtroTipo);
+  }, [investimentos, filtroTipo]);
+
   return (
     <div className="app-container">
-      <Header onAddInvestimento={handleOpenModal} totalAtivos={resumo?.contagemAtivos}/>
+      <Header totalAtivos={resumo?.contagemAtivos ?? 0}/>
       <main>
         {resumo && <CardResumo resumo={resumo} investimentos={investimentos}/>}
-        <div className="investimentos-container">
-          <div className="tool-bar">
-            <h2>Meus Investimentos</h2>
-          </div>
+          <div className="investimentos-container">
            <InvestimentosTable 
-              investimentos={investimentos}
+              investimentos={investimentosFiltrados}
               onEdit={handleEdit}
               onDelete={handleRefreshData}
+              onAddInvestimento={handleOpenModal}
+              filtroPorTipo={filtroTipo}
+              setFiltroPorTipo={setFiltroTipo}
           />
         </div>
-       
       </main>
       <CreateInvestimento
           isOpen={isModalOpen}

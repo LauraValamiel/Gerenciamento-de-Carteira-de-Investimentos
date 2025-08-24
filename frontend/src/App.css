@@ -1,11 +1,11 @@
 /* Reset e Fontes Globais */
 :root {
-  --primary-color: #3b82f6;
-  --background-color: #f1f5f9;
-  --card-background: #ffffff;
-  --text-color: #1e293b;
-  --text-light: #64748b;
-  --border-color: #e2e8f0;
+  --primary-color: #749BC2;
+  --background-color: #ffffff;
+  --card-background: #f3f1f1;
+  --text-color: #000000;
+  --text-light: #2d2c2c;
+  --border-color: #cecfd1;
   --positive-color: #28a745;
   --negative-color: #dc3545;
   --chip-acao: #3b82f6;
@@ -37,9 +37,11 @@ body {
   align-items: center;
   margin-bottom: 2rem;
   background-color: var(--card-background);
+  background-color: #749BC2;
   padding: 1.5rem 2rem;
   border-radius: 0.75rem;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  color: #2d2c2c;
 }
 
 .app-header .logo {
@@ -58,7 +60,20 @@ body {
   color: var(--text-color);
 }
 
-/* Cards de Resumo */
+.app-header .logo p {
+  margin: 0;
+  color: var(--text-light);
+}
+
+.asset-count-chip {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+/* Grid dos Cards de Resumo */
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -86,7 +101,7 @@ body {
   margin: 0;
 }
 
-/* Tabela de Investimentos */
+/* Container da Tabela */
 .investimentos-container {
   background-color: var(--card-background);
   border-radius: 0.75rem;
@@ -94,12 +109,48 @@ body {
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
+/* NOVO: Seção do Filtro */
+.filter-section {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #f3f1f1;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  color: var(--text-light);
+  border: 1px solid #cecfd1;
+}
+
+.filter-container label {
+  font-weight: 500;
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+.filter-container select {
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
 .toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
+
+
 
 .toolbar h2 {
   margin: 0;
@@ -120,6 +171,7 @@ th, td {
   text-align: left;
   border-bottom: 1px solid var(--border-color);
   white-space: nowrap;
+  vertical-align: middle;
 }
 
 thead {
@@ -137,9 +189,14 @@ tbody tr:hover {
   background-color: #f9fafb;
 }
 
-/* Estilos de Cores e Chips */
+/* Cores e Chips */
 .positive { color: var(--positive-color); }
 .negative { color: var(--negative-color); }
+
+td span.positive, td span.negative {
+  display: block;
+  font-size: 0.8rem;
+}
 
 .chip {
   padding: 0.25rem 0.75rem;
@@ -173,7 +230,6 @@ tbody tr:hover {
   gap: 0.5rem;
   transition: background-color 0.2s;
 }
-
 .button-primary:hover {
   background-color: #2563eb;
 }
@@ -186,8 +242,8 @@ tbody tr:hover {
   margin: 0 0.2rem;
   color: var(--text-light);
   font-size: 1rem;
+  transition: color 0.2s;
 }
-
 .button-icon:hover { color: var(--primary-color); }
 .button-icon.delete:hover { color: var(--negative-color); }
 
@@ -198,13 +254,12 @@ tbody tr:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(15, 23, 42, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
-
 .modal-content {
   background: white;
   padding: 2rem;
@@ -213,7 +268,6 @@ tbody tr:hover {
   max-width: 500px;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
 }
-
 .modal-content h2 { margin-top: 0; }
 .form-group { margin-bottom: 1rem; }
 .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-light); }

@@ -3,11 +3,10 @@ import { FaPlus } from 'react-icons/fa';
 import logoIcon from '../assets/icone.png';
 
 interface HeaderInterface {
-    onAddInvestimento: () => void;
     totalAtivos: number;
 }
 
-const Header: React.FC<HeaderInterface> = ({ onAddInvestimento, totalAtivos }) => {
+const Header: React.FC<HeaderInterface> = ({ totalAtivos }) => {
 
     return (
         <header className="app-header">
@@ -22,10 +21,6 @@ const Header: React.FC<HeaderInterface> = ({ onAddInvestimento, totalAtivos }) =
             <div className="assets-count-chip">
                 {totalAtivos} Ativos na Carteira
             </div>
-            <button onClick={onAddInvestimento} className="button-primary">
-                <FaPlus/>
-                Adicionar Investimento
-            </button>
         </header>
     );
 
