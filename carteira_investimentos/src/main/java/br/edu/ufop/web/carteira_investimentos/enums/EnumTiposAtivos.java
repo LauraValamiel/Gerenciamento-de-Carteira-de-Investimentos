@@ -5,10 +5,10 @@ import lombok.Getter;
 @Getter
 public enum EnumTiposAtivos {
 
-    ACAO(1, "Açôes da bolsa"),
+    ACAO(1, "Ações da bolsa"),
     CRIPTO(2, "Criptomoedas"),
-    FUNDO(3, "Fundo"),
-    RENDA_FIXA(4, "Fundos de investimentos"),
+    FUNDO(3, "Fundos de Investimentos"),
+    RENDA_FIXA(4, "Títulos de Renda Fixa"),
     OUTRO(5, "Outros");
 
     private final Integer id;
